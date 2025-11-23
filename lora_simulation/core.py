@@ -1,8 +1,9 @@
 from .models import Config, State
 
 class LoraSimulation():
-  def __init__(self):
+  def __init__(self, distance):
     self.config: Config = None
+    self.distance = distance
 
   def set_config(self, config: Config) -> None:
     self.config = config
