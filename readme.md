@@ -14,5 +14,5 @@ LoRaSim models RSSI, SNR, propagation, packet success/failure, Time-on-Air, and 
 ## 📦 Installation
 
 ```bash
-pip install git+https://github.com/yourname/lora-sim.git
+pip install git+https://github.com/georgelviv/lora-simulation.git
 ```

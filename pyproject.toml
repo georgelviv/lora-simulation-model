@@ -1,6 +1,6 @@
 [project]
-name = "lora-sim"
-version = "0.1.0"
+name = "lora-simulation"
+version = "0.0.1"
 description = "LoRa physical layer"
 authors = [{name = "Shkoropad Yurii",  email = "lvivgeorg@gmail.com"}]
 requires-python = ">=3.12"
