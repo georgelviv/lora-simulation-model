@@ -2,7 +2,7 @@
 name = "lora-sim"
 version = "0.1.0"
 description = "LoRa physical layer"
-authors = [{name = "Shkoropad Yurii"}]
+authors = [{name = "Shkoropad Yurii",  email = "lvivgeorg@gmail.com"}]
 requires-python = ">=3.12"
 
 [build-system]
