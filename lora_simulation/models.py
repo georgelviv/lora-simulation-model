@@ -1,4 +1,5 @@
 from typing import TypedDict
+from dataclasses import dataclass
 
 class State(TypedDict):
   delay: int
@@ -19,3 +20,10 @@ class Config(TypedDict):
   PL: int
   CL: int
   RT: int
+
+@dataclass
+class EnvironmentModel:
+  name: str
+  path_loss_exponent: float
+  shadow_sigma_db: float
+  description: str = ""   

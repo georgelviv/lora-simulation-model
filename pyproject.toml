@@ -5,7 +5,8 @@ description = "LoRa physical layer"
 authors = [{name = "Shkoropad Yurii",  email = "lvivgeorg@gmail.com"}]
 requires-python = ">=3.12"
 dependencies = [
-  "pytest>=8.0"
+  "pytest>=8.0",
+  "numpy>=2.3.5"
 ]
 
 [build-system]
