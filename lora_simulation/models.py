@@ -26,4 +26,5 @@ class EnvironmentModel:
   name: str
   path_loss_exponent: float
   shadow_sigma_db: float
-  description: str = ""   
+  distance_m: float  
+  description: str = "" 
