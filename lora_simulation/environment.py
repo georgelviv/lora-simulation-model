@@ -5,7 +5,7 @@ LORA_SIMULATION_ENVIRONMENTS = {
     name="open_field",
     path_loss_exponent=2.0,
     shadow_sigma_db=1.0,
-    distance_m=500,
+    distance_m=50,
     description="Clear line-of-sight, almost no obstructions."
   ),
   "suburban": EnvironmentModel(

@@ -1,7 +1,7 @@
 import random
 import numpy as np
-from lora_simulation.core import LoraSimulation
-from lora_simulation.models import Config
+from lora_simulation import LoraSimulation
+from lora_simulation import Config
 
 def test_lora_simulation():
   random.seed(1)
@@ -30,7 +30,7 @@ def test_lora_simulation():
     'bytes_per_second': 611.0,
     'chunks_count': 1.0,
     'delay': 151.0,
-    'rssi': -32.0,
+    'rssi': -73.67181149044961,
     'snr': 7.25,
     'time_over_air': 36.0,
     'attempt': 2

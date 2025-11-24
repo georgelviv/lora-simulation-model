@@ -23,21 +23,20 @@ class LoraSimulation():
     freq = self.config.get('FQ') * 10e6
     tx_power_dbm = self.config.get('TP')
 
-    self.logger.info(tx_power_dbm)
-
-    # compute_rssi(
-    #   distance_m=self.env_model.distance_m,
-    #   freq_hz=freq,
-    #   d0=1,
-    #   path_loss_exponent=self.env_model.path_loss_exponent,
-    #   tx_power_dbm=tx_power_dbm
-    # )
+    rssi = compute_rssi(
+      distance_m=self.env_model.distance_m,
+      freq_hz=freq,
+      d0=1,
+      path_loss_exponent=self.env_model.path_loss_exponent,
+      tx_power_dbm=tx_power_dbm,
+      shadow_sigma_db=self.env_model.shadow_sigma_db
+    )
 
     return {
       'bytes_per_second': 611.0,
       'chunks_count': 1.0,
       'delay': 151.0,
-      'rssi': -32.0,
+      'rssi': rssi,
       'snr': 7.25,
       'time_over_air': 36.0,
       'attempt': 2
