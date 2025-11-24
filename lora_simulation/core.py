@@ -35,13 +35,13 @@ class LoraSimulation():
     )
 
     state: State = {
-      'bytes_per_second': 611.0,
-      'chunks_count': 1.0,
-      'delay': 151.0,
-      'rssi': rssi,
-      'snr': 7.25,
-      'time_over_air': 36.0,
-      'attempt': 2
+      'BPS': 611.0,
+      'CHC': 1.0,
+      'DELAY': 151.0,
+      'RSSI': rssi,
+      'SNR': 7.25,
+      'TOA': 36.0,
+      'ATT': 2
     }
 
     self.logger.info(lora_log("PING", state))
