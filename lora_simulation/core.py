@@ -1,9 +1,11 @@
 from .models import Config, State, EnvironmentModel
-from .phy_utils import compute_rssi
+from .utils import (
+  lora_rssi_hata_chip, lora_snr_chip, lora_log,
+  lora_delay_ms
+)
 import logging
 from .logger import default_logger
 from .environment import LORA_SIMULATION_ENVIRONMENTS
-from .utils import lora_log
 
 class LoraSimulation():
   def __init__(
@@ -24,24 +26,43 @@ class LoraSimulation():
   def ping(self) -> State:
     freq = self.config.get('FQ') * 10e6
     tx_power_dbm = self.config.get('TP')
+    sf = self.config.get('SF')
+    bw = self.config.get('BW') * 10e3
+    cr = self.config.get('CR')
 
-    rssi = compute_rssi(
+    rssi_chip = lora_rssi_hata_chip(
       distance_m=self.env_model.distance_m,
       freq_hz=freq,
-      d0=1,
-      path_loss_exponent=self.env_model.path_loss_exponent,
       tx_power_dbm=tx_power_dbm,
-      shadow_sigma_db=self.env_model.shadow_sigma_db
+      shadow_sigma_db=self.env_model.shadow_sigma_db,
+      hb_m=self.env_model.hb_m,
+      hm_m=self.env_model.hm_m,
+      area=self.env_model.area_type,
+      sf=sf
+    )
+
+    snr_chip = lora_snr_chip(
+      rssi_dbm=rssi_chip,
+      bw_hz=bw,
+      area=self.env_model.area_type,
+      sigma_noise_db=self.env_model.sigma_noise_db
+    )
+
+    delay = lora_delay_ms(
+      sf=sf,
+      bw_hz=bw,
+      payload_bytes=10,
+      cr=cr
     )
 
     state: State = {
       'BPS': 611.0,
       'CHC': 1.0,
-      'DELAY': 151.0,
-      'RSSI': rssi,
-      'SNR': 7.25,
+      'DELAY': delay,
+      'RSSI': rssi_chip,
+      'SNR': snr_chip,
       'TOA': 36.0,
-      'ATT': 2
+      'ATT': 1
     }
 
     self.logger.info(lora_log("PING", state))

@@ -1,4 +1,8 @@
-from lora_simulation.phy_utils import path_loss, compute_rssi
+from lora_simulation.utils import (
+  path_loss, compute_rssi, lora_snr_chip,
+  lora_delay_ms
+)
+from lora_simulation.models import AreaType
 import random
 import numpy as np
 
@@ -36,3 +40,16 @@ def test_compute_rssi():
   np.random.seed(1)
   assert compute_rssi(500, 868e6, 1, 2, 10, 2) == -72.28413092270193
 
+
+def test_lora_snr_chip():
+  random.seed(1)
+  np.random.seed(1)
+
+  assert lora_snr_chip(-66, 500e3, AreaType.LARGE_URBAN, 2.0) == 10.5
+  assert lora_snr_chip(-80, 500e3, AreaType.LARGE_URBAN, 2.0) == 9.5
+  assert lora_snr_chip(-80, 1250e3, AreaType.LARGE_URBAN, 2.0) == 7.25
+  assert lora_snr_chip(-80, 1250e3, AreaType.LARGE_URBAN, 2.0) == 5.5
+
+def test_lora_delay_ms():
+  assert lora_delay_ms(10, 500e3, 1000, 8) == 4823.0
+  assert lora_delay_ms(10, 500e3, 10, 8) == 229.4

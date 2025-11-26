@@ -1,19 +1,18 @@
 import random
 import numpy as np
-from lora_simulation import LoraSimulation
-from lora_simulation import Config
+from lora_simulation import Config, LORA_SIMULATION_ENVIRONMENTS, LoraSimulation
 
 def test_lora_simulation():
   random.seed(1)
   np.random.seed(1)
 
-  lora_sim = LoraSimulation()
+  lora_sim = LoraSimulation(env_model=LORA_SIMULATION_ENVIRONMENTS['open_field'])
   lora_config: Config = {
-    "SF": 8.0,
+    "SF": 12,
     "FQ": 878,
-    "BW": 125.0,
+    "BW": 500.0,
     "CR": 8.0,
-    "TP": 10.0,
+    "TP": 20,
     "IH": 0.0,
     "HS": 10.0,
     "PL": 10.0,
@@ -27,11 +26,11 @@ def test_lora_simulation():
   assert lora_sim.get_config() == lora_config
 
   assert lora_sim.ping() == {
-    'bytes_per_second': 611.0,
-    'chunks_count': 1.0,
-    'delay': 151.0,
-    'rssi': -73.67181149044961,
-    'snr': 7.25,
-    'time_over_air': 36.0,
-    'attempt': 2
+    'BPS': 611.0,
+    'CHC': 1.0,
+    'DELAY': 840.7,
+    'RSSI': -66.61333507831323,
+    'SNR': 10.75,
+    'TOA': 36.0,
+    'ATT': 1
   }
