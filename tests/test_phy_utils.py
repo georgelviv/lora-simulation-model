@@ -1,6 +1,7 @@
 from lora_simulation.utils import (
   path_loss, compute_rssi, lora_snr_chip,
-  lora_delay_ms, chunks_count
+  lora_delay_ms, chunks_count, lora_time_on_air_ms,
+  bytes_per_second
 )
 from lora_simulation.models import AreaType
 import random
@@ -58,3 +59,14 @@ def test_chunks_count():
   assert chunks_count(10) == 1
   assert chunks_count(1000) == 5
   assert chunks_count(1000, True, 100) == 10
+
+
+def test_lora_time_on_air_ms():
+  assert lora_time_on_air_ms(12, 500e3, 10) == 314
+  assert lora_time_on_air_ms(12, 500e3, 1024) == 13749
+  assert lora_time_on_air_ms(12, 125e3, 1024) == 54996.0
+  assert lora_time_on_air_ms(6, 125e3, 1024) == 1708
+
+def test_bytes_per_second():
+  assert bytes_per_second(1000, 1) == 1
+  assert bytes_per_second(100, 1) == 0.1

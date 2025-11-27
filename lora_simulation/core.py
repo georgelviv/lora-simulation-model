@@ -1,7 +1,7 @@
 from .models import Config, State, EnvironmentModel
 from .utils import (
   lora_rssi_hata_chip, lora_snr_chip, lora_log,
-  lora_delay_ms
+  lora_delay_ms, chunks_count, lora_time_on_air_ms
 )
 import logging
 from .logger import default_logger
@@ -29,6 +29,10 @@ class LoraSimulation():
     sf = self.config.get('SF')
     bw = self.config.get('BW') * 10e3
     cr = self.config.get('CR')
+    ih = self.config.get('IH')
+    pl = self.config.get('PL')
+
+    payload_size = 10
 
     rssi_chip = lora_rssi_hata_chip(
       distance_m=self.env_model.distance_m,
@@ -51,17 +55,17 @@ class LoraSimulation():
     delay = lora_delay_ms(
       sf=sf,
       bw_hz=bw,
-      payload_bytes=10,
+      payload_bytes=payload_size,
       cr=cr
     )
 
     state: State = {
       'BPS': 611.0,
-      'CHC': 1.0,
+      'CHC': chunks_count(payload_size, ih, pl),
       'DELAY': delay,
       'RSSI': rssi_chip,
       'SNR': snr_chip,
-      'TOA': 36.0,
+      'TOA': lora_time_on_air_ms(sf, bw, payload_size, cr, pl),
       'ATT': 1
     }
 

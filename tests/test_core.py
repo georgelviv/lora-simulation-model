@@ -31,6 +31,6 @@ def test_lora_simulation():
     'DELAY': 840.7,
     'RSSI': -66.61333507831323,
     'SNR': 10.75,
-    'TOA': 36.0,
+    'TOA': 31.400000000000002,
     'ATT': 1
   }
