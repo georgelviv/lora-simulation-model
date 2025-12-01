@@ -2,6 +2,13 @@ import random
 import math
 from ..models import AreaType
 
+def compute_noise_floor(bw_hz: float, noise_figure_db: float = 6.0) -> float:
+  return -174 + 10 * math.log10(bw_hz) + noise_figure_db
+
+def compute_snr(rssi_dbm: float, bw_hz: float, noise_figure_db: float = 6.0) -> float:
+  noise_floor = compute_noise_floor(bw_hz, noise_figure_db)
+  return rssi_dbm - noise_floor
+
 def env_noise_floor_125khz(area: AreaType) -> float:
   if area == AreaType.RURAL:
     return -97.0
