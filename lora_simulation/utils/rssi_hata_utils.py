@@ -86,4 +86,5 @@ def lora_rssi_hata_chip(
     hb_m, hm_m, area
   )
   bias = 1.5 + 0.7 * (sf - 7)
-  return rssi_physical + bias
+  rssi_chip = rssi_physical + bias
+  return round(rssi_chip, 3)
