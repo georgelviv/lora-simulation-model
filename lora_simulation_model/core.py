@@ -1,6 +1,6 @@
 from .models import Config, State, EnvironmentModel
 from .utils import (
-  lora_rssi_hata_chip, lora_snr_chip, lora_log,
+  lora_rssi_hata_chip, compute_snr, lora_log,
   lora_delay_ms, chunks_count, lora_time_on_air_ms,
   bytes_per_second, rtoa_ms
 )
@@ -50,15 +50,20 @@ class LoraSimulationModel():
       shadow_sigma_db=self.env_model.shadow_sigma_db,
       hb_m=self.env_model.hb_m,
       hm_m=self.env_model.hm_m,
-      area=self.env_model.area_type,
-      sf=sf
+      area=self.env_model.area_type
     )
 
-    snr_chip = lora_snr_chip(
+    # snr_chip = lora_snr_chip(
+    #   rssi_dbm=rssi_chip,
+    #   bw_hz=bw,
+    #   area=self.env_model.area_type,
+    #   sigma_noise_db=self.env_model.sigma_noise_db
+    # )
+
+    snr_chip = compute_snr(
       rssi_dbm=rssi_chip,
-      bw_hz=bw,
-      area=self.env_model.area_type,
-      sigma_noise_db=self.env_model.sigma_noise_db
+      sf=sf,
+      bw_hz=bw
     )
 
     delay = lora_delay_ms(

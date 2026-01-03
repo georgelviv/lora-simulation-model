@@ -1,12 +1,14 @@
 import random
 import numpy as np
-from lora_simulation import Config, LORA_SIMULATION_ENVIRONMENTS, LoraSimulation, State
+import pytest
+from lora_simulation_model import Config, LORA_SIMULATION_ENVIRONMENTS, LoraSimulationModel, State
 
-def test_lora_simulation():
+@pytest.mark.asyncio
+async def test_lora_simulation():
   random.seed(1)
   np.random.seed(1)
 
-  lora_sim = LoraSimulation(env_model=LORA_SIMULATION_ENVIRONMENTS['open_field'])
+  lora_sim = LoraSimulationModel(env_model=LORA_SIMULATION_ENVIRONMENTS['open_field'])
   lora_config: Config = {
     "SF": 12,
     "FQ": 878,
@@ -19,13 +21,17 @@ def test_lora_simulation():
     "CL": 45.0,
     "RT": 1.0
   }
-  lora_sim.set_config(
+  await lora_sim.config_sync(
+    1, 
     lora_config
   )
 
-  assert lora_sim.get_config() == lora_config
+  cfg = await lora_sim.config_get()
+  assert cfg == lora_config
 
-  assert lora_sim.ping() == {
+  state = await lora_sim.ping(1)
+
+  assert state == {
     'BPS': 31.847,
     'CHC': 1.0,
     'DELAY': 840.7,
@@ -36,43 +42,3 @@ def test_lora_simulation():
     'ETX': 1, 
     'RTOA': 379.536
   }
-
-def test_lora_validation():
-  lora_sim = LoraSimulation(env_model=LORA_SIMULATION_ENVIRONMENTS['open_field'])
-
-  lora_configs: list[Config] = [
-    { "SF": 12, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-    { "SF": 11, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-    { "SF": 10, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-    { "SF":  9, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-    { "SF":  8, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-    { "SF":  7, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-    { "SF":  6, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-
-    { "SF": 12, "FQ": 878, "BW": 250.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-    { "SF": 12, "FQ": 878, "BW": 125.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-
-    { "SF": 12, "FQ": 878, "BW": 500.0, "CR": 7.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-    { "SF": 12, "FQ": 878, "BW": 500.0, "CR": 6.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-    { "SF": 12, "FQ": 878, "BW": 500.0, "CR": 5.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-
-    { "SF": 12, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 17, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-    { "SF": 12, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 16, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-    { "SF": 12, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 15, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-    { "SF": 12, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 14, "IH": 0.0, "HS": 10.0, "PL": 10.0, "CL": 45.0, "RT": 1.0 },
-
-    { "SF": 12, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 6.0,  "CL": 45.0, "RT": 1.0 },
-    { "SF": 12, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 20.0, "CL": 45.0, "RT": 1.0 },
-    { "SF": 12, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 30.0, "CL": 45.0, "RT": 1.0 },
-    { "SF": 12, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 40.0, "CL": 45.0, "RT": 1.0 },
-    { "SF": 12, "FQ": 878, "BW": 500.0, "CR": 8.0, "TP": 20, "IH": 0.0, "HS": 10.0, "PL": 50.0, "CL": 45.0, "RT": 1.0 }
-  ]
-
-  for i in lora_configs:
-    lora_sim.set_config(
-      i
-    )
-
-    state: State = lora_sim.ping()
-
-    print(state['RSSI'])
