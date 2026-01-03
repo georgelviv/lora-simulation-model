@@ -1,5 +1,5 @@
 [project]
-name = "lora-simulation"
+name = "lora-simulation-model"
 version = "0.0.1"
 description = "LoRa physical layer"
 authors = [{name = "Shkoropad Yurii",  email = "lvivgeorg@gmail.com"}]
