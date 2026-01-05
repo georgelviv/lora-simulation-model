@@ -71,3 +71,49 @@ def rtoa_ms(toa_ms: float, sf: int, bw_hz: float) -> float:
     return toa_ms + 8.0 * ts_ms
   else:
     return toa_ms + 31.8
+
+def calculate_delay(
+    toa_ms: float,
+    sf: int,
+    bw_hz: int,
+    cr: int,
+    pl_bytes: int,
+) -> float:
+    """
+    Calibrated LoRa delay model.
+    TOA is precomputed.
+    Returns DELAY in milliseconds.
+    """
+
+    # --- Calibrated software + HW overheads (ms) ---
+    # Extracted from experiments (median over distances)
+    T_SW = {
+        # BW = 500 kHz, PL = 10
+        (6, 500_000): 61.0,
+        (7, 500_000): 62.0,
+        (8, 500_000): 64.0,
+        (9, 500_000): 69.0,
+        (10, 500_000): 78.0,
+        (11, 500_000): 98.0,
+
+        # SF12 special cases (strong BW dependency)
+        (12, 125_000): 900.0,
+        (12, 250_000): 480.0,
+        (12, 500_000): 260.0,
+    }
+
+    key = (sf, bw_hz)
+
+    if key in T_SW:
+        t_sw = T_SW[key]
+    else:
+        # Safe fallback (only for unseen configs)
+        # linear interpolation in SF
+        if sf < 6:
+            t_sw = 60.0
+        elif sf > 12:
+            t_sw = 300.0
+        else:
+            t_sw = 60.0 + (sf - 6) * 6.5
+
+    return 2.0 * toa_ms + t_sw

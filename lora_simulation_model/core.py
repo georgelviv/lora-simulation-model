@@ -1,7 +1,7 @@
 from .models import Config, State, EnvironmentModel
 from .utils import (
   lora_rssi_hata_chip, compute_snr, lora_log,
-  lora_delay_ms, chunks_count, lora_time_on_air_ms,
+  calculate_delay, chunks_count, lora_time_on_air_ms,
   bytes_per_second, rtoa_ms
 )
 import logging
@@ -53,28 +53,22 @@ class LoraSimulationModel():
       area=self.env_model.area_type
     )
 
-    # snr_chip = lora_snr_chip(
-    #   rssi_dbm=rssi_chip,
-    #   bw_hz=bw,
-    #   area=self.env_model.area_type,
-    #   sigma_noise_db=self.env_model.sigma_noise_db
-    # )
-
     snr_chip = compute_snr(
       rssi_dbm=rssi_chip,
       sf=sf,
       bw_hz=bw
     )
 
-    delay = lora_delay_ms(
-      sf=sf,
-      bw_hz=bw,
-      payload_bytes=payload_size,
-      cr=cr
-    )
-
     toa = lora_time_on_air_ms(sf, bw, payload_size, cr, pl)
     rtoa = rtoa_ms(toa_ms=toa, sf=sf, bw_hz=bw)
+
+    delay = calculate_delay(
+      toa_ms=rtoa,
+      sf=sf,
+      bw_hz=bw,
+      cr=cr,
+      pl_bytes=pl
+    )
 
     state: State = {
       'BPS': bytes_per_second(payload_size, toa),
